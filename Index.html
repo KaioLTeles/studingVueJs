@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Shopping List</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+    <div id="shopping-list">
+        <div class="header">
+            <h1>{{ header.toLocaleUpperCase() }}</h1>
+            <button v-on:click="changeState('edit')" v-if="state === 'default'" class="btn btn-primary">Adicionar
+                Item</button>
+            <button v-on:click="changeState('default')" v-else class="btn btn-cancel">Cancelar</button>
+        </div>
+        </br>
+        <div v-if="state === 'edit'" class="add-item-form">
+            <input v-model="newItem" type="text" placeholder="Insira um item na lista  =)" class="form-control"
+                v-on:keyup.enter="saveItem">
+            <button class="btn btn-primary" v-bind:disabled="newItem.length < 3" v-on:click="saveItem">Incluir
+                Item</button>
+        </div>
+        <ul>
+            <li v-for="item in items" :class="{strikeout: item.active}" v-on:click="toggleActive(item)">{{ item.label }}</li>
+        </ul>
+        <p v-if="items.length === 0">Lista Vazia! Adicione novos itens para as proximas compras.</p>
+        <button v-if="items.length > 0" v-on:click="clearItems()" class="btn btn-cancel">Limpar Lista</button>
+    </div>    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        var shoppingList = new Vue({
+            el: '#shopping-list',
+            data: {
+                state: 'default',
+                header: 'lista de compras',
+                title: 'Um simples app para lhe auxiliar nas suas compras.',
+                newItem: '',
+                items: []
+            },
+            methods: {
+                saveItem: function () {
+                    if (this.newItem.length >= 3) {
+                        this.items.push({
+                            label: this.newItem,
+                            active: false,
+                        });
+                        this.newItem = '';
+                    }
+                    else
+                    alert("");
+                },
+                changeState: function (newState) {
+                    this.state = newState;
+                    this.newItem = '';
+                },
+                toggleActive: function (item) {
+                    item.active = !item.active;
+                },
+                clearItems: function(){                    
+                    this.items.splice(0, this.items.length);                
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
